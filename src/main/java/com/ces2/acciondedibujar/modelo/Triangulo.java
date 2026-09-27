@@ -1,13 +1,17 @@
 package com.ces2.acciondedibujar.modelo;
 
+import java.util.List;
+
 public class Triangulo implements Figura {
 
-    private final Dibujo dibujo;
-    private double base;
-    private double altura;
+    private final String nombre;
+    private final List<Dibujo> dibujos;
+    private final double base;
+    private final double altura;
 
-    public Triangulo(Dibujo dibujo, double base, double altura) {
-        this.dibujo = dibujo;
+    public Triangulo(String nombre, List<Dibujo> dibujos, double base, double altura) {
+        this.nombre = nombre;
+        this.dibujos = dibujos;
         this.base = base;
         this.altura = altura;
     }
@@ -17,27 +21,30 @@ public class Triangulo implements Figura {
     }
 
     @Override
-    public String dibujar(Dibujo dibujo) {
-        return "[Triangulo] Se dibuja " + dibujo.getNombre() + " uniendo tres puntos, base "
-                + base + " y altura " + altura + " " + dibujo.getUnidad()
-                + ", trazo de " + dibujo.getGrosorTrazo() + " px.";
+    public String dibujar(List<Dibujo> dibujos) {
+        return "[Triangulo] " + nombre + " une tres puntos para " + dibujos.size()
+                + " dibujo(s), base " + base + " altura " + altura + ".";
     }
 
     @Override
-    public String colorear(Dibujo dibujo) {
-        return "[Triangulo] " + dibujo.getNombre() + " se sombrea de " + dibujo.getColor()
-                + (dibujo.isRelleno() ? " en toda su area." : " solo en los lados.");
+    public String colorear(List<Dibujo> dibujos) {
+        return "[Triangulo] " + nombre + " sombrea " + dibujos.size() + " dibujo(s) del lote.";
     }
 
     @Override
-    public String mostrarPropiedades(Dibujo dibujo) {
-        return "[Triangulo] " + dibujo.getNombre() + ": base " + base + ", altura " + altura
-                + " " + dibujo.getUnidad() + ", area " + String.format("%.2f", area()) + ".";
+    public String mostrarPropiedades(List<Dibujo> dibujos) {
+        return "[Triangulo] " + nombre + ": base " + base + ", altura " + altura
+                + ", area " + String.format("%.2f", area()) + ", " + dibujos.size() + " dibujo(s) en la lista.";
     }
 
     @Override
-    public Dibujo getDibujo() {
-        return dibujo;
+    public String getNombre() {
+        return nombre;
+    }
+
+    @Override
+    public List<Dibujo> getDibujos() {
+        return dibujos;
     }
 
     @Override

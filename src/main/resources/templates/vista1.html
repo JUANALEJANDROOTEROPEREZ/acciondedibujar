@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Peticion 1</title>
+    <style>
+        body { font-family: Times New Roman, serif; margin: 20px; background: #ffffff; color: #000000; }
+        h1 { font-size: 18px; }
+    </style>
+</head>
+<body>
+    <h1>Peticion 1: nombres de los 12 objetos separados por coma</h1>
+    <p><a href="/">Volver</a></p>
+    <p th:text="${nombres}">nombres</p>
+</body>
+</html>

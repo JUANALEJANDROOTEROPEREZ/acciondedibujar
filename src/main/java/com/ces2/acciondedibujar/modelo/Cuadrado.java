@@ -1,12 +1,16 @@
 package com.ces2.acciondedibujar.modelo;
 
+import java.util.List;
+
 public class Cuadrado implements Figura {
 
-    private final Dibujo dibujo;
-    private double lado;
+    private final String nombre;
+    private final List<Dibujo> dibujos;
+    private final double lado;
 
-    public Cuadrado(Dibujo dibujo, double lado) {
-        this.dibujo = dibujo;
+    public Cuadrado(String nombre, List<Dibujo> dibujos, double lado) {
+        this.nombre = nombre;
+        this.dibujos = dibujos;
         this.lado = lado;
     }
 
@@ -19,27 +23,30 @@ public class Cuadrado implements Figura {
     }
 
     @Override
-    public String dibujar(Dibujo dibujo) {
-        return "[Cuadrado] Se dibuja " + dibujo.getNombre() + " con regla y escuadra, lado "
-                + lado + " " + dibujo.getUnidad() + " y trazo de " + dibujo.getGrosorTrazo() + " px.";
+    public String dibujar(List<Dibujo> dibujos) {
+        return "[Cuadrado] " + nombre + " traza con regla " + dibujos.size()
+                + " dibujo(s), lado " + lado + ".";
     }
 
     @Override
-    public String colorear(Dibujo dibujo) {
-        return "[Cuadrado] " + dibujo.getNombre() + " se pinta de " + dibujo.getColor()
-                + (dibujo.isRelleno() ? " rellenando toda la superficie." : " dejando el centro vacio.");
+    public String colorear(List<Dibujo> dibujos) {
+        return "[Cuadrado] " + nombre + " pinta " + dibujos.size() + " dibujo(s) del lote.";
     }
 
     @Override
-    public String mostrarPropiedades(Dibujo dibujo) {
-        return "[Cuadrado] " + dibujo.getNombre() + ": lado " + lado + " " + dibujo.getUnidad()
-                + ", area " + String.format("%.2f", area())
-                + ", perimetro " + String.format("%.2f", perimetro()) + ".";
+    public String mostrarPropiedades(List<Dibujo> dibujos) {
+        return "[Cuadrado] " + nombre + ": lado " + lado + ", area " + String.format("%.2f", area())
+                + ", perimetro " + String.format("%.2f", perimetro()) + ", " + dibujos.size() + " dibujo(s) en la lista.";
     }
 
     @Override
-    public Dibujo getDibujo() {
-        return dibujo;
+    public String getNombre() {
+        return nombre;
+    }
+
+    @Override
+    public List<Dibujo> getDibujos() {
+        return dibujos;
     }
 
     @Override

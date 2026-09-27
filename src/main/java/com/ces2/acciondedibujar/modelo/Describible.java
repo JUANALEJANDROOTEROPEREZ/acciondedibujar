@@ -1,6 +1,8 @@
 package com.ces2.acciondedibujar.modelo;
 
-public interface Describible extends Coloreable {
+import java.util.List;
 
-    String mostrarPropiedades(Dibujo dibujo);
+public interface Describible {
+
+    String mostrarPropiedades(List<Dibujo> dibujos);
 }

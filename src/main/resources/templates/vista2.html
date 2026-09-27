@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Peticion 2</title>
+    <style>
+        body { font-family: Times New Roman, serif; margin: 20px; background: #ffffff; color: #000000; }
+        h1 { font-size: 18px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+        th, td { border: 1px solid #000000; padding: 5px 8px; text-align: left; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <h1>Peticion 2: estadisticas del grosor de trazo de los dibujos de cada objeto</h1>
+    <p><a href="/">Volver</a></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Nombre</th>
+                <th>Conteo</th>
+                <th>Suma total</th>
+                <th>Promedio</th>
+                <th>Minimo</th>
+                <th>Maximo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="e : ${estadisticas}">
+                <td th:text="${e.tipo}">tipo</td>
+                <td th:text="${e.nombre}">nombre</td>
+                <td th:text="${e.conteo}">0</td>
+                <td th:text="${e.sumaTotal}">0</td>
+                <td th:text="${#numbers.formatDecimal(e.promedio, 1, 2)}">0.00</td>
+                <td th:text="${e.minimo}">0</td>
+                <td th:text="${e.maximo}">0</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

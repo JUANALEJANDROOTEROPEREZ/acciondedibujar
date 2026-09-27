@@ -1,60 +1,135 @@
 package com.ces2.acciondedibujar.controlador;
 
-import com.ces2.acciondedibujar.modelo.Circulo;
-import com.ces2.acciondedibujar.modelo.Cuadrado;
 import com.ces2.acciondedibujar.modelo.Dibujo;
+import com.ces2.acciondedibujar.modelo.EstadisticaDibujos;
+import com.ces2.acciondedibujar.modelo.FilaCoincidenciasDibujos;
+import com.ces2.acciondedibujar.modelo.FilaColoresDibujos;
+import com.ces2.acciondedibujar.modelo.FilaMayorTrazo;
 import com.ces2.acciondedibujar.modelo.Figura;
-import com.ces2.acciondedibujar.modelo.ResultadoFigura;
-import com.ces2.acciondedibujar.modelo.Triangulo;
+import com.ces2.acciondedibujar.repositories.Dibujos;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class DibujoControlador {
 
     @GetMapping("/")
-    public String mostrarDibujos(Model model) {
+    public String index() {
+        return "index";
+    }
 
-        List<Figura> figuras = new ArrayList<>();
+    @GetMapping("peticion1")
+    public String peticion1(Model model) {
 
-        figuras.add(new Circulo(
-                new Dibujo("Circulo A", "rojo", 2, true, "cm"), 5));
-        figuras.add(new Circulo(
-                new Dibujo("Circulo B", "azul", 3, false, "cm"), 8.5));
-        figuras.add(new Circulo(
-                new Dibujo("Circulo C", "verde", 1, true, "mm"), 12));
+        String nombres = Dibujos.lista.stream()
+                .map(Figura::getNombre)
+                .collect(Collectors.joining(", "));
 
-        figuras.add(new Cuadrado(
-                new Dibujo("Cuadrado A", "negro", 2, false, "cm"), 4));
-        figuras.add(new Cuadrado(
-                new Dibujo("Cuadrado B", "amarillo", 4, true, "cm"), 7));
-        figuras.add(new Cuadrado(
-                new Dibujo("Cuadrado C", "morado", 3, true, "m"), 2));
+        model.addAttribute("nombres", nombres);
 
-        figuras.add(new Triangulo(
-                new Dibujo("Triangulo A", "naranja", 2, true, "cm"), 6, 4));
-        figuras.add(new Triangulo(
-                new Dibujo("Triangulo B", "gris", 1, false, "cm"), 10, 3));
-        figuras.add(new Triangulo(
-                new Dibujo("Triangulo C", "cyan", 5, true, "mm"), 8, 8));
+        return "vista1";
+    }
 
-        List<ResultadoFigura> resultados = new ArrayList<>();
-        for (Figura figura : figuras) {
-            Dibujo dibujo = figura.getDibujo();
-            resultados.add(new ResultadoFigura(
+    @GetMapping("peticion2")
+    public String peticion2(Model model) {
+
+        List<EstadisticaDibujos> estadisticas = new ArrayList<>();
+
+        for (Figura figura : Dibujos.lista) {
+
+            IntSummaryStatistics stats = figura.getDibujos().stream()
+                    .collect(Collectors.summarizingInt(Dibujo::getGrosorTrazo));
+
+            estadisticas.add(new EstadisticaDibujos(
                     figura.tipo(),
-                    dibujo.getNombre(),
-                    figura.dibujar(dibujo),
-                    figura.colorear(dibujo),
-                    figura.mostrarPropiedades(dibujo)));
+                    figura.getNombre(),
+                    stats.getCount(),
+                    (int) stats.getSum(),
+                    stats.getAverage(),
+                    stats.getCount() == 0 ? 0 : stats.getMin(),
+                    stats.getCount() == 0 ? 0 : stats.getMax()));
         }
 
-        model.addAttribute("titulo", "Trabajo 1 - Polimorfismo: la accion de dibujar");
-        model.addAttribute("resultados", resultados);
-        return "resultado";
+        model.addAttribute("estadisticas", estadisticas);
+
+        return "vista2";
+    }
+
+    @GetMapping("peticion3")
+    public String peticion3(Model model) {
+
+        List<FilaColoresDibujos> filas = new ArrayList<>();
+
+        for (Figura figura : Dibujos.lista) {
+
+            List<String> colores = figura.getDibujos().stream()
+                    .map(Dibujo::getColor)
+                    .collect(Collectors.toList());
+
+            filas.add(new FilaColoresDibujos(figura.tipo(), figura.getNombre(), colores));
+        }
+
+        model.addAttribute("filas", filas);
+
+        return "vista3";
+    }
+
+    @GetMapping("peticion4")
+    public String peticion4(Model model) {
+
+        List<FilaCoincidenciasDibujos> filas = new ArrayList<>();
+
+        for (Figura figura : Dibujos.lista) {
+
+            boolean algunDibujoConRelleno = figura.getDibujos().stream()
+                    .anyMatch(Dibujo::isRelleno);
+
+            boolean algunDibujoConTrazoGrueso = figura.getDibujos().stream()
+                    .anyMatch(dibujo -> dibujo.getGrosorTrazo() > 3);
+
+            boolean ningunDibujoConTrazoExtremo = figura.getDibujos().stream()
+                    .noneMatch(dibujo -> dibujo.getGrosorTrazo() > 10);
+
+            filas.add(new FilaCoincidenciasDibujos(
+                    figura.tipo(),
+                    figura.getNombre(),
+                    algunDibujoConRelleno,
+                    algunDibujoConTrazoGrueso,
+                    ningunDibujoConTrazoExtremo));
+        }
+
+        model.addAttribute("filas", filas);
+
+        return "vista4";
+    }
+
+    @GetMapping("peticion5")
+    public String peticion5(Model model) {
+
+        List<FilaMayorTrazo> filas = new ArrayList<>();
+
+        for (Figura figura : Dibujos.lista) {
+
+            Optional<Dibujo> mayorTrazo = figura.getDibujos().stream()
+                    .max(Comparator.comparingInt(Dibujo::getGrosorTrazo));
+
+            String descripcion = mayorTrazo
+                    .map(dibujo -> dibujo.getNombre() + " (trazo " + dibujo.getGrosorTrazo() + " px)")
+                    .orElse("Sin dibujos en la lista");
+
+            filas.add(new FilaMayorTrazo(figura.tipo(), figura.getNombre(), descripcion));
+        }
+
+        model.addAttribute("filas", filas);
+
+        return "vista5";
     }
 }

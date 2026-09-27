@@ -1,8 +1,12 @@
 package com.ces2.acciondedibujar.modelo;
 
+import java.util.List;
+
 public interface Figura extends Dibujable, Coloreable, Describible {
 
-    Dibujo getDibujo();
+    String getNombre();
+
+    List<Dibujo> getDibujos();
 
     String tipo();
 }

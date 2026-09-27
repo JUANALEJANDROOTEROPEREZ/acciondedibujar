@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Peticion 5</title>
+    <style>
+        body { font-family: Times New Roman, serif; margin: 20px; background: #ffffff; color: #000000; }
+        h1 { font-size: 18px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+        th, td { border: 1px solid #000000; padding: 5px 8px; text-align: left; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <h1>Peticion 5: dibujo con mayor grosor de trazo en la lista de cada objeto</h1>
+    <p><a href="/">Volver</a></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Nombre</th>
+                <th>Dibujo con mayor trazo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="f : ${filas}">
+                <td th:text="${f.tipo}">tipo</td>
+                <td th:text="${f.nombre}">nombre</td>
+                <td th:text="${f.dibujoConMayorTrazo}">-</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

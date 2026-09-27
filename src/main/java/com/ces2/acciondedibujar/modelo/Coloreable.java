@@ -1,6 +1,8 @@
 package com.ces2.acciondedibujar.modelo;
 
-public interface Coloreable extends Dibujable {
+import java.util.List;
 
-    String colorear(Dibujo dibujo);
+public interface Coloreable {
+
+    String colorear(List<Dibujo> dibujos);
 }
