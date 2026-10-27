@@ -16,8 +16,7 @@
     <table>
         <thead>
             <tr>
-                <th>Tipo</th>
-                <th>Nombre</th>
+                <th>Objeto</th>
                 <th>Conteo</th>
                 <th>Suma total</th>
                 <th>Promedio</th>
@@ -27,13 +26,12 @@
         </thead>
         <tbody>
             <tr th:each="e : ${estadisticas}">
-                <td th:text="${e.tipo}">tipo</td>
-                <td th:text="${e.nombre}">nombre</td>
-                <td th:text="${e.conteo}">0</td>
-                <td th:text="${e.sumaTotal}">0</td>
-                <td th:text="${#numbers.formatDecimal(e.promedio, 1, 2)}">0.00</td>
-                <td th:text="${e.minimo}">0</td>
-                <td th:text="${e.maximo}">0</td>
+                <td th:text="${e.key}">objeto</td>
+                <td th:text="${e.value.conteo}">0</td>
+                <td th:text="${e.value.suma}">0</td>
+                <td th:text="${#numbers.formatDecimal(e.value.promedio, 1, 2)}">0.00</td>
+                <td th:text="${e.value.minimo}">0</td>
+                <td th:text="${e.value.maximo}">0</td>
             </tr>
         </tbody>
     </table>

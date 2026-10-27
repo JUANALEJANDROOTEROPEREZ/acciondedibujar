@@ -6,30 +6,36 @@
     <style>
         body { font-family: Times New Roman, serif; margin: 20px; background: #ffffff; color: #000000; }
         h1 { font-size: 18px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+        table { border-collapse: collapse; margin-top: 12px; }
         th, td { border: 1px solid #000000; padding: 5px 8px; text-align: left; font-size: 13px; }
     </style>
 </head>
 <body>
-    <h1>Peticion 4: anyMatch y noneMatch sobre los dibujos de cada objeto</h1>
+    <h1>Peticion 4: anyMatch, allMatch y noneMatch sobre los 12 objetos</h1>
     <p><a href="/">Volver</a></p>
     <table>
         <thead>
             <tr>
-                <th>Tipo</th>
-                <th>Nombre</th>
-                <th>anyMatch: algun dibujo con relleno</th>
-                <th>anyMatch: algun dibujo con trazo grueso (&gt; 3 px)</th>
-                <th>noneMatch: ningun dibujo con trazo extremo (&gt; 10 px)</th>
+                <th>Consulta</th>
+                <th>Resultado</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="f : ${filas}">
-                <td th:text="${f.tipo}">tipo</td>
-                <td th:text="${f.nombre}">nombre</td>
-                <td th:text="${f.algunDibujoConRelleno}">-</td>
-                <td th:text="${f.algunDibujoConTrazoGrueso}">-</td>
-                <td th:text="${f.ningunDibujoConTrazoExtremo}">-</td>
+            <tr>
+                <td>anyMatch: alguna figura tiene la lista de dibujos vacia</td>
+                <td th:text="${algunaSinDibujos}">-</td>
+            </tr>
+            <tr>
+                <td>anyMatch: alguna figura tiene mas de 2 dibujos</td>
+                <td th:text="${algunaConMasDeDos}">-</td>
+            </tr>
+            <tr>
+                <td>allMatch: todas las figuras tienen 5 dibujos o menos</td>
+                <td th:text="${todasConCincoOMenos}">-</td>
+            </tr>
+            <tr>
+                <td>noneMatch: ninguna figura tiene 6 dibujos o mas</td>
+                <td th:text="${ningunaConSeisOMas}">-</td>
             </tr>
         </tbody>
     </table>

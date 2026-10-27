@@ -1,20 +1,17 @@
 package com.ces2.acciondedibujar.controlador;
 
 import com.ces2.acciondedibujar.modelo.Dibujo;
-import com.ces2.acciondedibujar.modelo.EstadisticaDibujos;
-import com.ces2.acciondedibujar.modelo.FilaCoincidenciasDibujos;
-import com.ces2.acciondedibujar.modelo.FilaColoresDibujos;
-import com.ces2.acciondedibujar.modelo.FilaMayorTrazo;
 import com.ces2.acciondedibujar.modelo.Figura;
 import com.ces2.acciondedibujar.repositories.Dibujos;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.IntSummaryStatistics;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -41,22 +38,22 @@ public class DibujoControlador {
     @GetMapping("peticion2")
     public String peticion2(Model model) {
 
-        List<EstadisticaDibujos> estadisticas = new ArrayList<>();
-
-        for (Figura figura : Dibujos.lista) {
-
-            IntSummaryStatistics stats = figura.getDibujos().stream()
-                    .collect(Collectors.summarizingInt(Dibujo::getGrosorTrazo));
-
-            estadisticas.add(new EstadisticaDibujos(
-                    figura.tipo(),
-                    figura.getNombre(),
-                    stats.getCount(),
-                    (int) stats.getSum(),
-                    stats.getAverage(),
-                    stats.getCount() == 0 ? 0 : stats.getMin(),
-                    stats.getCount() == 0 ? 0 : stats.getMax()));
-        }
+        Map<String, Map<String, Number>> estadisticas = Dibujos.lista.stream()
+                .collect(Collectors.toMap(
+                        figura -> figura.getNombre() + " (" + figura.tipo() + ")",
+                        figura -> {
+                            IntSummaryStatistics stats = figura.getDibujos().stream()
+                                    .collect(Collectors.summarizingInt(Dibujo::getGrosorTrazo));
+                            Map<String, Number> datos = new LinkedHashMap<>();
+                            datos.put("conteo", stats.getCount());
+                            datos.put("suma", stats.getSum());
+                            datos.put("promedio", stats.getAverage());
+                            datos.put("minimo", stats.getCount() == 0 ? 0 : stats.getMin());
+                            datos.put("maximo", stats.getCount() == 0 ? 0 : stats.getMax());
+                            return datos;
+                        },
+                        (primero, segundo) -> primero,
+                        LinkedHashMap::new));
 
         model.addAttribute("estadisticas", estadisticas);
 
@@ -66,18 +63,16 @@ public class DibujoControlador {
     @GetMapping("peticion3")
     public String peticion3(Model model) {
 
-        List<FilaColoresDibujos> filas = new ArrayList<>();
+        List<Dibujo> dibujos = Dibujos.lista.stream()
+                .flatMap(figura -> figura.getDibujos().stream())
+                .toList();
 
-        for (Figura figura : Dibujos.lista) {
+        List<String> coloresDibujos = Dibujos.lista.stream()
+                .flatMap(figura -> figura.getDibujos().stream().map(Dibujo::getColor))
+                .toList();
 
-            List<String> colores = figura.getDibujos().stream()
-                    .map(Dibujo::getColor)
-                    .collect(Collectors.toList());
-
-            filas.add(new FilaColoresDibujos(figura.tipo(), figura.getNombre(), colores));
-        }
-
-        model.addAttribute("filas", filas);
+        model.addAttribute("dibujos", dibujos);
+        model.addAttribute("coloresDibujos", coloresDibujos);
 
         return "vista3";
     }
@@ -85,28 +80,22 @@ public class DibujoControlador {
     @GetMapping("peticion4")
     public String peticion4(Model model) {
 
-        List<FilaCoincidenciasDibujos> filas = new ArrayList<>();
+        Boolean algunaSinDibujos = Dibujos.lista.stream()
+                .anyMatch(figura -> figura.getDibujos().isEmpty());
 
-        for (Figura figura : Dibujos.lista) {
+        Boolean algunaConMasDeDos = Dibujos.lista.stream()
+                .anyMatch(figura -> figura.getDibujos().size() > 2);
 
-            boolean algunDibujoConRelleno = figura.getDibujos().stream()
-                    .anyMatch(Dibujo::isRelleno);
+        Boolean todasConCincoOMenos = Dibujos.lista.stream()
+                .allMatch(figura -> figura.getDibujos().size() <= 5);
 
-            boolean algunDibujoConTrazoGrueso = figura.getDibujos().stream()
-                    .anyMatch(dibujo -> dibujo.getGrosorTrazo() > 3);
+        Boolean ningunaConSeisOMas = Dibujos.lista.stream()
+                .noneMatch(figura -> figura.getDibujos().size() >= 6);
 
-            boolean ningunDibujoConTrazoExtremo = figura.getDibujos().stream()
-                    .noneMatch(dibujo -> dibujo.getGrosorTrazo() > 10);
-
-            filas.add(new FilaCoincidenciasDibujos(
-                    figura.tipo(),
-                    figura.getNombre(),
-                    algunDibujoConRelleno,
-                    algunDibujoConTrazoGrueso,
-                    ningunDibujoConTrazoExtremo));
-        }
-
-        model.addAttribute("filas", filas);
+        model.addAttribute("algunaSinDibujos", algunaSinDibujos);
+        model.addAttribute("algunaConMasDeDos", algunaConMasDeDos);
+        model.addAttribute("todasConCincoOMenos", todasConCincoOMenos);
+        model.addAttribute("ningunaConSeisOMas", ningunaConSeisOMas);
 
         return "vista4";
     }
@@ -114,21 +103,15 @@ public class DibujoControlador {
     @GetMapping("peticion5")
     public String peticion5(Model model) {
 
-        List<FilaMayorTrazo> filas = new ArrayList<>();
+        List<Dibujo> dibujos = Dibujos.lista.stream()
+                .flatMap(figura -> figura.getDibujos().stream())
+                .toList();
 
-        for (Figura figura : Dibujos.lista) {
+        Optional<Dibujo> mayorTrazo = dibujos.stream()
+                .max(Comparator.comparing(Dibujo::getGrosorTrazo));
 
-            Optional<Dibujo> mayorTrazo = figura.getDibujos().stream()
-                    .max(Comparator.comparingInt(Dibujo::getGrosorTrazo));
-
-            String descripcion = mayorTrazo
-                    .map(dibujo -> dibujo.getNombre() + " (trazo " + dibujo.getGrosorTrazo() + " px)")
-                    .orElse("Sin dibujos en la lista");
-
-            filas.add(new FilaMayorTrazo(figura.tipo(), figura.getNombre(), descripcion));
-        }
-
-        model.addAttribute("filas", filas);
+        model.addAttribute("dibujos", dibujos);
+        model.addAttribute("mayorTrazo", mayorTrazo.orElse(null));
 
         return "vista5";
     }

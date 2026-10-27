@@ -6,28 +6,42 @@
     <style>
         body { font-family: Times New Roman, serif; margin: 20px; background: #ffffff; color: #000000; }
         h1 { font-size: 18px; }
+        h2 { font-size: 15px; }
         table { border-collapse: collapse; width: 100%; margin-top: 12px; }
         th, td { border: 1px solid #000000; padding: 5px 8px; text-align: left; font-size: 13px; }
     </style>
 </head>
 <body>
-    <h1>Peticion 3: colores de los dibujos de la lista de cada objeto</h1>
+    <h1>Peticion 3: flatMap sobre las listas de dibujos de los 12 objetos</h1>
     <p><a href="/">Volver</a></p>
+
+    <h2>Lista de todos los dibujos de los 12 objetos</h2>
     <table>
         <thead>
             <tr>
-                <th>Tipo</th>
+                <th>#</th>
                 <th>Nombre</th>
-                <th>Colores de los dibujos</th>
+                <th>Color</th>
+                <th>Grosor de trazo</th>
+                <th>Relleno</th>
+                <th>Unidad</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="f : ${filas}">
-                <td th:text="${f.tipo}">tipo</td>
-                <td th:text="${f.nombre}">nombre</td>
-                <td th:text="${#strings.listJoin(f.coloresDibujos, ', ')}">-</td>
+            <tr th:each="d, iter : ${dibujos}">
+                <td th:text="${iter.count}">1</td>
+                <td th:text="${d.nombre}">nombre</td>
+                <td th:text="${d.color}">color</td>
+                <td th:text="${d.grosorTrazo}">0</td>
+                <td th:text="${d.relleno}">-</td>
+                <td th:text="${d.unidad}">unidad</td>
             </tr>
         </tbody>
     </table>
+
+    <h2>Lista de los colores de esos dibujos</h2>
+    <ul>
+        <li th:each="color : ${coloresDibujos}" th:text="${color}">color</li>
+    </ul>
 </body>
 </html>

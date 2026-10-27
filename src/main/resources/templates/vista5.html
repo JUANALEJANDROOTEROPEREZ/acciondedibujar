@@ -6,26 +6,36 @@
     <style>
         body { font-family: Times New Roman, serif; margin: 20px; background: #ffffff; color: #000000; }
         h1 { font-size: 18px; }
+        h2 { font-size: 15px; }
         table { border-collapse: collapse; width: 100%; margin-top: 12px; }
         th, td { border: 1px solid #000000; padding: 5px 8px; text-align: left; font-size: 13px; }
     </style>
 </head>
 <body>
-    <h1>Peticion 5: dibujo con mayor grosor de trazo en la lista de cada objeto</h1>
+    <h1>Peticion 5: dibujo con mayor grosor de trazo entre los dibujos de los 12 objetos</h1>
     <p><a href="/">Volver</a></p>
+
+    <h2>Dibujo con mayor grosor de trazo</h2>
+    <p th:if="${mayorTrazo != null}"
+       th:text="${mayorTrazo.nombre + ' - color ' + mayorTrazo.color + ', trazo ' + mayorTrazo.grosorTrazo + ' px, unidad ' + mayorTrazo.unidad}">dibujo</p>
+    <p th:if="${mayorTrazo == null}">No hay dibujos en las listas.</p>
+
+    <h2>Lista de todos los dibujos de los 12 objetos</h2>
     <table>
         <thead>
             <tr>
-                <th>Tipo</th>
+                <th>#</th>
                 <th>Nombre</th>
-                <th>Dibujo con mayor trazo</th>
+                <th>Color</th>
+                <th>Grosor de trazo</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="f : ${filas}">
-                <td th:text="${f.tipo}">tipo</td>
-                <td th:text="${f.nombre}">nombre</td>
-                <td th:text="${f.dibujoConMayorTrazo}">-</td>
+            <tr th:each="d, iter : ${dibujos}">
+                <td th:text="${iter.count}">1</td>
+                <td th:text="${d.nombre}">nombre</td>
+                <td th:text="${d.color}">color</td>
+                <td th:text="${d.grosorTrazo}">0</td>
             </tr>
         </tbody>
     </table>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Peticion 6</title>
+    <style>
+        body { font-family: Times New Roman, serif; margin: 20px; background: #ffffff; color: #000000; }
+        h1 { font-size: 18px; }
+        h2 { font-size: 15px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+        th, td { border: 1px solid #000000; padding: 5px 8px; text-align: left; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <h1>Trabajo 3 - Punto 1: objetos creados</h1>
+    <p><a href="/">Volver</a></p>
+
+    <h2>Stack con los 5 objetos Dibujo</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Color</th>
+                <th>Grosor de trazo</th>
+                <th>Relleno</th>
+                <th>Unidad</th>
+                <th>EnumDibujo</th>
+                <th>Categoria</th>
+                <th>Stack conteo (trazos por sesion)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="d : ${pilaDibujos}">
+                <td th:text="${d.nombre}">nombre</td>
+                <td th:text="${d.color}">color</td>
+                <td th:text="${d.grosorTrazo}">0</td>
+                <td th:text="${d.relleno}">-</td>
+                <td th:text="${d.unidad}">unidad</td>
+                <td th:text="${d.tipo}">tipo</td>
+                <td th:text="${d.categoria}">categoria</td>
+                <td th:text="${d.conteo}">[]</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Objeto Bocetos</h2>
+    <p th:text="${'Nombre: ' + bocetos.nombre + ' | Autor: ' + bocetos.autor + ' | EnumDibujo: ' + bocetos.tipo + ' | Categoria: ' + bocetos.categoria}">bocetos</p>
+
+    <h2>Dibujos guardados en el Deque de Bocetos</h2>
+    <ul>
+        <li th:each="d : ${bocetos.dibujos}" th:text="${d.nombre}">dibujo</li>
+    </ul>
+</body>
+</html>
